@@ -10,7 +10,7 @@ use App\Models\purchaseorders;
 use App\Models\purchaseordersdetails;
 use App\Models\products;
 
-
+use PDF;
 
 
 class purchase_entry extends Controller
@@ -78,9 +78,18 @@ function purchasereport()
 
 function viewdetailpurchasereport(Request $req)
 {
-    $result=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->get();
-    echo $result;
-    //return view('admin.purchase_record_detail');
+    $result=DB::table('suppliers')->select('suppliers.supplier_name','suppliers.supplier_address','suppliers.supplier_phone','suppliers.supplier_email','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt','purchase_order_details.discount_percent','purchase_order_details.discount_amount','purchase_order_details.vat_amt','purchase_order_details.total_amt_with_vat','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name','products.unit_name','users.name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('users','users.id','=','purchase_order_details.user_id')->rightJoin('products','purchase_orders.product_id','=','products.id')->where('purchase_order_details.id','=',$req->id)->get();
+     return view('admin.purchase_record_detail',['data'=>$result]);
+}
+
+//print the purchase records
+
+function printpurchaserecord(Request $req)
+{
+     $data=DB::table('suppliers')->select('suppliers.supplier_name','suppliers.supplier_address','suppliers.supplier_phone','suppliers.supplier_email','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt','purchase_order_details.discount_percent','purchase_order_details.discount_amount','purchase_order_details.vat_amt','purchase_order_details.total_amt_with_vat','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name','products.unit_name','users.name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('users','users.id','=','purchase_order_details.user_id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('products','purchase_orders.product_id','=','products.id')->where('purchase_order_details.id','=',$req->id)->get();
+     
+    $pdf=PDF::loadView('admin.purchase_record_pdf',['data'=>$data]);
+    return $pdf->stream();
 }
 
 }

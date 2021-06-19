@@ -52,6 +52,18 @@ Route::get('/purchasereport','purchase_entry@purchasereport');
 //purchase report view details
 Route::get('/viewpurchasedetail/{id}','purchase_entry@viewdetailpurchasereport');
 
+//purchase records print
+Route::get('/purchaseorderpdf/{id}','purchase_entry@printpurchaserecord');
+
+//purchase records search by date
+Route::get('/reportbypurchasedate',function()
+{
+    return view('/admin.purchase_records_by_date');
+});
+
+//purchase records by date search the request form ajax
+Route::post('/purchasereportbydate','ajaxsearch@purchase_report_by_date');
+
 //PRODUCTS CONTENTS
 
 //SHOW ALL PRODICTS

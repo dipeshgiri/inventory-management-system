@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\products;
 use App\Models\suppliersdetails;
-
+use App\Models\purchaseorders;
+use App\Models\purchaseordersdetails;
 
 class ajaxsearch extends Controller
 {
@@ -24,5 +25,13 @@ class ajaxsearch extends Controller
             $output .='</ul>';
             echo $output;
         
+    }
+    function purchase_report_by_date(Request $req)
+    {
+        $startdate=$req->get('startdate');
+        $enddate=$req->get('enddate');
+        $data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with_vat')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
+        echo $data;
+
     }
 }
