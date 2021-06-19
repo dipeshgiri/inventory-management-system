@@ -177,10 +177,9 @@ function show_purchase_records_by_date() {
         data: { startdate: startdate, enddate: enddate, _token: _token },
         success: function (data) {
             var data = JSON.parse(data);
-
             var id = document.getElementById("tbody");
             var tbodyHtml = "";
-
+            var totsum=0;
             data.forEach(function (value, key) {
                 tbodyHtml +=
                     `
@@ -194,17 +193,25 @@ function show_purchase_records_by_date() {
                       <td class="text-center">` +
                     data[key].supplier_name +
                     `</td>
-                      <td class="text-center" class="amot">` +
+                      <td class="text-center" id="amount">` +
                     data[key].total_amt_with_vat +
                     `</td>
-                    </tr>
+                    </tr> 
                   `;
+
+                  totsum+=parseFloat(data[key].total_amt_with_vat);
             });
+            tbodyHtml+=`<tr><th colspan="3"></th><td><b>
+            Total-Amount  : </b>`+totsum+`
+            </th></tr>`;
           
             id.innerHTML = tbodyHtml;
+
+            
         },
         error: function () {
             //console.log("error";);
         },
     });
 }
+

@@ -63,6 +63,8 @@ Route::get('/reportbypurchasedate',function()
 
 //purchase records by date search the request form ajax
 Route::post('/purchasereportbydate','ajaxsearch@purchase_report_by_date');
+//purchase records by date pdf
+Route::post('/purchasereportbydatepdf','purchase_entry@print_purchase_record_by_Date');
 
 //PRODUCTS CONTENTS
 

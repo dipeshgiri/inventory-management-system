@@ -91,5 +91,16 @@ function printpurchaserecord(Request $req)
     $pdf=PDF::loadView('admin.purchase_record_pdf',['data'=>$data]);
     return $pdf->stream();
 }
+function print_purchase_record_by_date(Request $req)
+{
+	$startdate=$req->get('startdate');
+	$enddate=$req->get('enddate');
+	$data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with_vat')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
 
+	$sum=DB::table('purchase_order_details')->whereBetween('purchase_order_details.date',[$startdate,$enddate])->sum('purchase_order_details.total_amt_with_vat');
+
+	$pdf=PDF::loadView('admin.purchase_record_by_date_pdf',['data'=>$data,'sum'=>$sum,'startdate'=>$startdate,'enddate'=>$enddate]);
+    return $pdf->stream();
+
+}
 }
