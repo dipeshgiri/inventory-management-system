@@ -210,8 +210,115 @@ function show_purchase_records_by_date() {
             
         },
         error: function () {
-            //console.log("error";);
+          tbodyHtml=`<p>Internal Server Error Occured Please Try Again.</p>`
+            id.innerHTML=tbodyHtml;
         },
     });
+
 }
 
+function show_purchase_records_by_supplier_name()
+{
+  var suppliername=document.getElementById("suppliername").value;
+  var startdate = document.getElementById("startdate").value;
+  var enddate = document.getElementById("enddate").value;
+  var _token = $('input[name="_token"]').val();
+  $.ajax({
+      url: "/purchasereportbysupplier",
+      method: "POST",
+      data: { suppliername:suppliername,startdate: startdate, enddate: enddate, _token: _token },
+      success: function (data) {
+        var data = JSON.parse(data);
+          var id = document.getElementById("tbody");
+          var tbodyHtml = "";
+          var totsum=0;
+          data.forEach(function (value, key) {
+            var previouskey=key-1;
+            if(key==0 || data[previouskey].id!=data[key].id)
+            {
+              tbodyHtml +=
+                  `
+                  <tr>
+                    <td class="text-center">` +
+                  data[key].id +
+                  `</td>
+                    <td class="text-center">` +
+                  data[key].date +
+                  `</td>
+                    <td class="text-center">` +
+                  data[key].supplier_name +
+                  `</td>
+                    <td class="text-center" id="amount">` +
+                  data[key].product_name +
+                  `</td>
+                  
+                  <td class="text-center" id="amount">` +
+                  data[key].product_quantity +
+                  `</td>
+                  
+                  <td class="text-center" id="amount">` +
+                  data[key].unit_price +
+                  `</td>
+                  
+                  <td class="text-center" id="amount">` +
+                  data[key].amount +
+                  `</td>
+                  <td class="text-center" id="amount">` +
+                  data[key].discount_percent +
+                  `</td>
+                  
+                  <td class="text-center" id="amount">` +
+                  data[key].total_amt_with_vat +
+                  `</td>
+                  </tr> 
+                  `;
+                  totsum+=parseFloat(data[key].total_amt_with_vat);
+            }
+            else{
+              tbodyHtml +=
+              `
+              <tr>
+                <td class="text-center">` +
+              data[key].id +
+              `</td>
+                <td class="text-center">` +
+              data[key].date +
+              `</td>
+                <td class="text-center">` +
+              data[key].supplier_name +
+              `</td>
+                <td class="text-center" id="amount">` +
+              data[key].product_name +
+              `</td>
+              
+              <td class="text-center" id="amount">` +
+              data[key].product_quantity +
+              `</td>
+              
+              <td class="text-center" id="amount">` +
+              data[key].unit_price +
+              `</td>
+              
+              <td class="text-center" id="amount">` +
+              data[key].amount +
+              `</td>
+              </tr> 
+              `;
+            }
+                
+          });
+          tbodyHtml+=`<tr><th colspan="8"></th><td><b>
+          Total-Amount  : </b>`+totsum+`
+          </th></tr>`;
+        
+          id.innerHTML = tbodyHtml;
+          
+
+          
+      },
+      error: function () {
+          //console.log("error";);
+      },
+  });
+
+}

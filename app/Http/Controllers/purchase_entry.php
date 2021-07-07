@@ -103,4 +103,14 @@ function print_purchase_record_by_date(Request $req)
     return $pdf->stream();
 
 }
+function print_purchase_record_by_suppliername(request $req)
+{
+	$suppliername=$req->get('suppliername');
+	$startdate=$req->get('startdate');
+	$enddate=$req->get('enddate');
+	/*$data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with','purchase_order_details.discount_percent','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('products','products.id','=','purchase_orders.product_id')->where('suppliers.supplier_name','=',$suppliername)->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
+	*/
+	$data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with_vat','purchase_order_details.discount_percent','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('products','products.id','=','purchase_orders.product_id')->where('supplier_name','=',$suppliername)->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
+	echo $data;
+}
 }

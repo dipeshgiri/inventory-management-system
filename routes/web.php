@@ -61,14 +61,25 @@ Route::get('/reportbypurchasedate',function()
     return view('/admin.purchase_records_by_date');
 });
 
+
 //purchase records by date search the request form ajax
 Route::post('/purchasereportbydate','ajaxsearch@purchase_report_by_date');
 //purchase records by date pdf
 Route::post('/purchasereportbydatepdf','purchase_entry@print_purchase_record_by_Date');
 
+//purchase report by supplier name and date
+Route::get('/reportbysuppliername',function(){
+    return view('/admin.purchase_report_by_supplier_name');
+});
+
+//Purchase records by supplier name search the request from ajax
+Route::post('/purchasereportbysupplier','ajaxsearch@purchase_report_by_supplier');
+
+//Purchase records by supplier name pdf
+Route::post('/purchasereportbysupplierpdf','purchase_entry@print_purchase_record_by_suppliername');
 //PRODUCTS CONTENTS
 
-//SHOW ALL PRODICTS
+//SHOW ALL PRODUCTS
 Route::get('/addnewproduct','products_details@showallproduct');
 //Add New Products
 Route::post('/addproduct','products_details@addnewproducts');

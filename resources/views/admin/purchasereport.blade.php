@@ -19,7 +19,7 @@ Purchase Orders Report
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">By Supplier Name</a>
+                        <a class="dropdown-item" href="/reportbysuppliername">By Supplier Name</a>
                         <a class="dropdown-item" href="/reportbypurchasedate">By Purchase Date</a>
                         <a class="dropdown-item" href="#">By Purchase Items</a>
                     </div>
