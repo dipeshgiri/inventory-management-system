@@ -68,20 +68,20 @@
                     <label style="margin-right:135px;">Sales</label>
                     </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Sales Entry / Invoice</a>
-                  <a class="dropdown-item" href="#">Sales Reports</a>
+                  <a class="dropdown-item" href="./salesentry">Sales Entry / Invoice</a>
+                  <a class="dropdown-item" href="./salesreport">Sales Reports</a>
                 </div>
               </li>
 
           <li>
-            <a href="./notifications.html">
+            <a href="./customer">
               <i class="now-ui-icons shopping_cart-simple"></i>
               <p>Customers</p>
             </a>
           </li>
          
           <li>
-            <a href="./notifications.html">
+            <a href="./stock">
               <i class="now-ui-icons files_paper"></i>
               <p>Stock</p>
             </a>

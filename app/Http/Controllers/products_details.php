@@ -12,7 +12,7 @@ class products_details extends Controller
     public function showallproduct()
     {
     	$result=DB::table('products')->orderBy('product_name')->paginate(10);
-        return view('admin.addnewproduct',['data'=>$result]);
+        return view('admin.addnewproduct',['data'=>$result,'date'=>$todaydate]);
     }
     public function addnewproducts(Request $req)
     {

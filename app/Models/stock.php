@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class purchaseordersdetails extends Model
+class stock extends Model
 {
-	use HasFactory;
-    protected $table='purchase_order_details';
+    use HasFactory;
+    protected $table='stock_details';
     public $timestamps=False;
+
 }

@@ -9,6 +9,7 @@ use App\Models\suppliersdetails;
 use App\Models\purchaseorders;
 use App\Models\purchaseordersdetails;
 use App\Models\products;
+use App\Models\stock;
 
 use PDF;
 
@@ -36,6 +37,7 @@ class purchase_entry extends Controller
     	$purchasedetails->supplier_id=$var['suppliername'];
     	$purchasedetails->user_id=Auth::id();
     	$check1=$purchasedetails->save();
+		
     	
 
     	//getting the purchase order details id
@@ -55,15 +57,17 @@ class purchase_entry extends Controller
     		$purchaseorder->product_quantity=$var['Quantity'][$i];
     		$purchaseorder->amount=$var['Amount'][$i];
     		$check2=$purchaseorder->save();
+
     	}
-    	if($check1 && $check2)
+
+    	if($check1 and $check2 )
     	{
     		$req->session()->flash('status',"New Purchase Records Added Successfully");
-  		   return redirect('/purchaseentry');
+  		    return redirect('/purchaseentry');
   		}
   		else{
   			$req->session()->flash('error',"server error occured");
-  		   return redirect('/purchaseentry');
+  		    return redirect('/purchaseentry');
   		}
     
     
@@ -108,9 +112,46 @@ function print_purchase_record_by_suppliername(request $req)
 	$suppliername=$req->get('suppliername');
 	$startdate=$req->get('startdate');
 	$enddate=$req->get('enddate');
-	/*$data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with','purchase_order_details.discount_percent','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('products','products.id','=','purchase_orders.product_id')->where('suppliers.supplier_name','=',$suppliername)->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
-	*/
+
 	$data=DB::table('suppliers')->select('suppliers.supplier_name','purchase_order_details.date','purchase_order_details.id','purchase_order_details.total_amt_with_vat','purchase_order_details.discount_percent','purchase_orders.unit_price','purchase_orders.product_quantity','purchase_orders.amount','products.product_name')->rightJoin('purchase_order_details','purchase_order_details.supplier_id','=','suppliers.id')->rightJoin('purchase_orders','purchase_orders.purchase_order_detail_id','=','purchase_order_details.id')->rightJoin('products','products.id','=','purchase_orders.product_id')->where('supplier_name','=',$suppliername)->whereBetween('purchase_order_details.date',[$startdate,$enddate])->get();
-	echo $data;
+	
+	print_r($data);
+	
+
+	/*$data = DB::table('suppliers')->where('supplier_name', $suppliername)->whereBetween('purchase_order_details.date',[$startdate,$enddate])
+        ->rightJoin('purchase_order_details', 'purchase_order_details.supplier_id', '=','suppliers.id')
+        ->rightJoin('purchase_orders', 'purchase_orders.purchase_order_detail_id', '=', 'purchase_order_details.id')
+		->rightJoin('products','products.id','=','purchase_orders.product_id')
+        ->select(
+            'suppliers.supplier_name as supplier_name',
+            'products.product_name as product_name',
+			'purchase_order_details.id as order_id'
+         
+          )
+         ->groupBy('order_id')
+         ->get();*/
+		 dump($data);
+		
+	//$pdf=PDF::loadView('admin.purchase_record_by_suppliername_pdf',['data'=>$data,'supplier'=>$suppliername,'startdate'=>$startdate,'enddate'=>$enddate])->setPaper('a4', 'landscape');
+    //return $pdf->stream();
 }
 }
+
+
+//trigger to update stock while purchasse
+/*DELIMITER $$
+CREATE TRIGGER INSERT_UPDATE_STOCK_AFTER_PURCHASE
+AFTER INSERT ON `purchase_orders`
+FOR EACH ROW
+BEGIN
+IF((SELECT `product_id` FROM stock_details WHERE `product_id`=NEW.product_id)>0)THEN
+UPDATE `stock_details` as s
+SET s.unit_in_stock=s.unit_in_stock + NEW.product_quantity
+WHERE s.product_id=NEW.product_id;
+
+ELSE
+	INSERT INTO `stock_details`(`product_id`,`unit_in_stock`)VALUES(NEW.product_id,NEW.product_quantity);
+
+END IF;
+END$$
+*/

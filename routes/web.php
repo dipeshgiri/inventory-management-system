@@ -33,13 +33,18 @@ Route::get('/supplier','suppliers@showallsupplier');
 //Add New Suppliers
 Route::post('/addnewsupplier','suppliers@addsupplier');
 
+//CUSTOMER CONTENT
+//show all customers
+Route::get('/customer','customers@showallcustomer');
 
+//Add New customer
+Route::post('/addnewcustomer','customers@addcustomer');
 
 //PURCHASE RECORDS CONTENTS
 
 //Add New Purchase Records
 Route::get('/purchaseentry','purchase_entry@purchaseform');
-//Search Products Using AJAX in Purchase Records
+//Search Products Using AJAX in Purchase/sales Records
 
 Route::post('/productsearch','ajaxsearch@productlist');
 
@@ -77,6 +82,25 @@ Route::post('/purchasereportbysupplier','ajaxsearch@purchase_report_by_supplier'
 
 //Purchase records by supplier name pdf
 Route::post('/purchasereportbysupplierpdf','purchase_entry@print_purchase_record_by_suppliername');
+
+//SALES CONTENT
+
+////Add New Sales Records
+Route::get('/salesentry','sales_entry@salesform');
+
+//Sales order data pushed to database
+Route::post('/salesdatasubmit','sales_entry@salesdatasave');
+
+//Sales Report 
+
+Route::get('/salesreport','sales_entry@salesreport');
+
+//sales report view details
+Route::get('/viewsalesdetail/{id}','sales_entry@viewdetailsalesreport');
+
+//sales records print
+Route::get('/sales_record_pdf/{id}','sales_entry@printsalesrecord');
+
 //PRODUCTS CONTENTS
 
 //SHOW ALL PRODUCTS
@@ -86,5 +110,8 @@ Route::post('/addproduct','products_details@addnewproducts');
 //Products PDF REPORTS
 Route::get('/productpdf','products_details@productpdf');
 
+//STOCK CONTENT
+Route::get('/stock','stocks@stock_detail');
+Route::get('/stockpdf','stocks@stockpdf');
 
 });
